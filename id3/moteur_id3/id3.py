@@ -48,15 +48,15 @@ class ID3:
         if(allInSameC):
             return NoeudDeDecision(None,donnees) #Leaf
         else:
-            attrToH = {attribut: h_C_A(donnees, attribut, valeurs) for attribut, valeurs in attributs.items()}
+            attrToH = {attribut: self.h_C_A(donnees, attribut, valeurs) for attribut, valeurs in attributs.items()}
 
             bestAttr = max(attrToH, key = lambda key: attrToH[key])
 
             valeurs = attributs[bestAttr]
 
-            partition = partitionne(donnees, bestAttr, valeurs)
+            partition = self.partitionne(donnees, bestAttr, valeurs)
 
-            childDict = { v: construit_arbre_recur(partition[v], attributs) for v in valeurs }
+            childDict = { v: self.construit_arbre_recur(partition[v], attributs) for v in valeurs }
             return NoeudDeDecision(bestAttr,donnees,childDict)
 
 
@@ -113,7 +113,7 @@ class ID3:
         classes = map(lambda d: d[0], donnees).unique
 
         def test(classe):
-            p = p_ci_aj(donnees,attribut,valeur, classe)
+            p = self.p_ci_aj(donnees,attribut,valeur, classe)
             p * log(p)
         
         proto = map(test, classes)
@@ -131,4 +131,4 @@ class ID3:
             :return: H(C|A)
         """
 
-        return sum(map(lambda valeur: h_C_aj(donnees, attribut, valeur), valeurs))
+        return sum(map(lambda valeur: self.h_C_aj(donnees, attribut, valeur), valeurs))
