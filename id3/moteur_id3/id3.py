@@ -43,7 +43,10 @@ class ID3:
             l'arbre de décision.
         """
         
-        allInSameC = all(map(lambda d: d[0] == donnees[0][0], donnees))
+        def f(d):
+            return d[0] == donnees[0][0]
+
+        allInSameC = True#all(list(map(f, donnees)))
 
         if(allInSameC):
             return NoeudDeDecision(None,donnees) #Leaf
@@ -72,8 +75,8 @@ class ID3:
             vaut a_j.
         """
         def split(valeur):
-            valeur: filter(lambda x: x[1][attribut] == valeur, donnees)
-        return map(split,valeurs)
+            return list(filter(lambda x: x[1][attribut] == valeur, donnees))
+        return {valeur: split(valeur) for valeur in valeurs}
 
     def p_aj(self, donnees, attribut, valeur):
         """ p(a_j) - la probabilité que la valeur de l'attribut A soit a_j.
@@ -98,7 +101,12 @@ class ID3:
         """
 
         knowingAj = filter(lambda x: x[1][attribut] == valeur, donnees)
-        return len(filter(lambda x: x[0] == classe, knowingAj))/len(knowingAj)
+
+        base = len(list(knowingAj))
+        if(base == 0):
+            return 0
+        else:
+            return len(list(filter(lambda x: x[0] == classe, knowingAj)))/base
 
     def h_C_aj(self, donnees, attribut, valeur):
         """ H(C|a_j) - l'entropie de la classe parmi les données pour lesquelles\
@@ -110,11 +118,14 @@ class ID3:
             :return: H(C|a_j)
         """
 
-        classes = map(lambda d: d[0], donnees).unique
+        classes = set(map(lambda d: d[0], donnees))
 
         def test(classe):
             p = self.p_ci_aj(donnees,attribut,valeur, classe)
-            p * log(p)
+            if(p==0):
+                return 0
+            else:
+                return p * log(p)
         
         proto = map(test, classes)
 
