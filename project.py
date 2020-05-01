@@ -1,11 +1,18 @@
+from id3.moteur_id3.id3  import ID3
+from id3.train_bin       import donnees as train_data
+from id3.test_public_bin import donnees as test_data
+
+
 class ResultValues():
 
     def __init__(self):
         
         # Do computations here
         
+        id3 = ID3()
+
         # Task 1
-        self.arbre = None
+        self.arbre = id3.construit_arbre(train_data)
         # Task 3
         self.faits_initiaux = None
         self.regles = None

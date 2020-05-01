@@ -1,7 +1,3 @@
-from moteur_id3.noeud_de_decision import NoeudDeDecision
-from moteur_id3.id3 import ID3
-
-
 # Les données d'apprentissage.
 donnees = [
     ['0', {
@@ -2150,15 +2146,3 @@ donnees = [
 		'thal': '2'
 	}]
 ]
-
-id3 = ID3()
-arbre = id3.construit_arbre(donnees)
-print('Arbre de décision :')
-print(arbre)
-print()
-
-print('Exemplification :')
-print(arbre.classifie({
-        'age': 'midlife',
-        'competition': 'no',
-        'type': 'hardware'}))
