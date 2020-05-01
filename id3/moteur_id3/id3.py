@@ -38,11 +38,28 @@ class ID3:
             ``[classe, {attribut -> valeur}, ...]``.
             :param attributs: un dictionnaire qui associe chaque\
             attribut A à son domaine de valeurs a_j.
+            :param list classes:
             :return: une instance de NoeudDeDecision correspondant à la racine de\
             l'arbre de décision.
         """
         
-        print('à compléter')
+        allInSameC = all(map(lambda d: d[0] == donnees[0][0], donnees))
+
+        if(allInSameC):
+            return NoeudDeDecision(None,donnees) #Leaf
+        else:
+            attrToH = {attribut: h_C_A(donnees, attribut, valeurs) for attribut, valeurs in attributs.items()}
+
+            bestAttr = max(attrToH, key = lambda key: attrToH[key])
+
+            valeurs = attributs[bestAttr]
+
+            partition = partitionne(donnees, bestAttr, valeurs)
+
+            childDict = { v: construit_arbre_recur(partition[v], attributs) for v in valeurs }
+            return NoeudDeDecision(bestAttr,donnees,)
+
+
 
     def partitionne(self, donnees, attribut, valeurs):
         """ Partitionne les données sur les valeurs a_j de l'attribut A.
@@ -54,8 +71,9 @@ class ID3:
             l'attribut A une liste l_j contenant les données pour lesquelles A\
             vaut a_j.
         """
-
-        print('à compléter')
+        def split(valeur):
+            valeur: filter(lambda x: x[1][attribut] == valeur, donnees)
+        return map(split,valeurs)
 
     def p_aj(self, donnees, attribut, valeur):
         """ p(a_j) - la probabilité que la valeur de l'attribut A soit a_j.
@@ -66,7 +84,7 @@ class ID3:
             :return: p(a_j)
         """
 
-        print('à compléter')
+        return len(filter(lambda x: x[1][attribut] == valeur, donnees))/len(donnees)
 
     def p_ci_aj(self, donnees, attribut, valeur, classe):
         """ p(c_i|a_j) - la probabilité conditionnelle que la classe C soit c_i\
@@ -79,7 +97,8 @@ class ID3:
             :return: p(c_i | a_j)
         """
 
-        print('à compléter')
+        knowingAj = filter(lambda x: x[1][attribut] == valeur, donnees)
+        return len(filter(lambda x: x[0] == classe, knowingAj))/len(knowingAj)
 
     def h_C_aj(self, donnees, attribut, valeur):
         """ H(C|a_j) - l'entropie de la classe parmi les données pour lesquelles\
@@ -91,7 +110,15 @@ class ID3:
             :return: H(C|a_j)
         """
 
-        print('à compléter')
+        classes = map(lambda d: d[0], donnees).unique
+
+        def test(classe):
+            p = p_ci_aj(donnees,attribut,valeur, classe)
+            p * log(p)
+        
+        proto = map(test, classes)
+
+        return -sum(proto)
 
     def h_C_A(self, donnees, attribut, valeurs):
         """ H(C|A) - l'entropie de la classe après avoir choisi de partitionner\
@@ -100,7 +127,8 @@ class ID3:
             :param list donnees: les données d'apprentissage.
             :param attribut: l'attribut A.
             :param list valeurs: les valeurs a_j de l'attribut A.
+            :param list classes: liste des classes possible
             :return: H(C|A)
         """
 
-        print('à compléter')
+        return sum(map(lambda valeur: h_C_aj(donnees, attribut, valeur), valeurs))
