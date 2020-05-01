@@ -46,14 +46,14 @@ class ID3:
         def f(d):
             return d[0] == donnees[0][0]
 
-        allInSameC = True#all(list(map(f, donnees)))
+        allInSameC = all([d[0] == donnees[0][0] for d in donnees])
 
         if(allInSameC):
             return NoeudDeDecision(None,donnees) #Leaf
         else:
             attrToH = {attribut: self.h_C_A(donnees, attribut, valeurs) for attribut, valeurs in attributs.items()}
 
-            bestAttr = max(attrToH, key = lambda key: attrToH[key])
+            bestAttr = min(attrToH, key = lambda key: attrToH[key])
 
             valeurs = attributs[bestAttr]
 
@@ -87,7 +87,7 @@ class ID3:
             :return: p(a_j)
         """
 
-        return len(filter(lambda x: x[1][attribut] == valeur, donnees))/len(donnees)
+        return len(list(filter(lambda x: x[1][attribut] == valeur, donnees)))/len(donnees)
 
     def p_ci_aj(self, donnees, attribut, valeur, classe):
         """ p(c_i|a_j) - la probabilité conditionnelle que la classe C soit c_i\
@@ -100,13 +100,14 @@ class ID3:
             :return: p(c_i | a_j)
         """
 
-        knowingAj = filter(lambda x: x[1][attribut] == valeur, donnees)
+        knowingAj = list(filter(lambda x: x[1][attribut] == valeur, donnees))
 
-        base = len(list(knowingAj))
+        base = len(knowingAj)
         if(base == 0):
             return 0
         else:
-            return len(list(filter(lambda x: x[0] == classe, knowingAj)))/base
+            result = len(list(filter(lambda x: x[0] == classe, knowingAj)))/base
+            return result
 
     def h_C_aj(self, donnees, attribut, valeur):
         """ H(C|a_j) - l'entropie de la classe parmi les données pour lesquelles\
@@ -120,14 +121,14 @@ class ID3:
 
         classes = set(map(lambda d: d[0], donnees))
 
-        def test(classe):
+        def pLogp(classe):
             p = self.p_ci_aj(donnees,attribut,valeur, classe)
             if(p==0):
                 return 0
             else:
                 return p * log(p)
         
-        proto = map(test, classes)
+        proto = list(map(pLogp, classes))
 
         return -sum(proto)
 
@@ -142,4 +143,4 @@ class ID3:
             :return: H(C|A)
         """
 
-        return sum(map(lambda valeur: self.h_C_aj(donnees, attribut, valeur), valeurs))
+        return sum(list(map(lambda valeur: self.p_aj(donnees,attribut,valeur) * self.h_C_aj(donnees, attribut, valeur), valeurs)))
