@@ -1,6 +1,5 @@
 from id3.moteur_id3.id3  import ID3
 from id3.train_bin       import donnees as train_data
-from id3.test_public_bin import donnees as test_data
 
 
 class ResultValues():
