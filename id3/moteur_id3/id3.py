@@ -57,7 +57,7 @@ class ID3:
             partition = partitionne(donnees, bestAttr, valeurs)
 
             childDict = { v: construit_arbre_recur(partition[v], attributs) for v in valeurs }
-            return NoeudDeDecision(bestAttr,donnees,)
+            return NoeudDeDecision(bestAttr,donnees,childDict)
 
 
 
