@@ -4,6 +4,19 @@ from .noeud_de_decision import NoeudDeDecision
 class ID3:
     """ Algorithme ID3. """
     
+    def computeAttributs(self, donnees):
+        attributs = {}
+        for donnee in donnees:
+            for attribut, valeur in donnee[1].items():
+                valeurs = attributs.get(attribut)
+                if valeurs is None:
+                    valeurs = set()
+                    attributs[attribut] = valeurs
+                valeurs.add(valeur)
+        
+        return attributs
+
+
     def construit_arbre(self, donnees):
         """ Construit un arbre de décision à partir des données d'apprentissage.
 
@@ -16,14 +29,7 @@ class ID3:
         # Nous devons extraire les domaines de valeur des 
         # attributs, puisqu'ils sont nécessaires pour 
         # construire l'arbre.
-        attributs = {}
-        for donnee in donnees:
-            for attribut, valeur in donnee[1].items():
-                valeurs = attributs.get(attribut)
-                if valeurs is None:
-                    valeurs = set()
-                    attributs[attribut] = valeurs
-                valeurs.add(valeur)
+        attributs = self.computeAttributs(donnees)
             
         arbre = self.construit_arbre_recur(donnees, attributs)
         
@@ -42,6 +48,8 @@ class ID3:
             :return: une instance de NoeudDeDecision correspondant à la racine de\
             l'arbre de décision.
         """
+
+        attributs = self.computeAttributs(donnees)
         
         def f(d):
             return d[0] == donnees[0][0]
@@ -76,7 +84,10 @@ class ID3:
         """
         def split(valeur):
             return list(filter(lambda x: x[1][attribut] == valeur, donnees))
-        return {valeur: split(valeur) for valeur in valeurs}
+        
+        dic = {valeur: split(valeur) for valeur in valeurs}
+
+        return dic
 
     def p_aj(self, donnees, attribut, valeur):
         """ p(a_j) - la probabilité que la valeur de l'attribut A soit a_j.
