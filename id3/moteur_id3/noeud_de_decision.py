@@ -58,6 +58,7 @@ class NoeudDeDecision:
             rep += '---'*level
             rep += 'Alors {}\n'.format(self.classe().upper())
             rep += '---'*level
+            
             rep += 'Décision basée sur les données:\n'
             for donnee in self.donnees:
                 rep += '---'*level
@@ -77,3 +78,37 @@ class NoeudDeDecision:
         """
 
         return str(self.repr_arbre(level=0))
+
+    def get_max_height(self):
+        height = 0
+
+        if self.terminal():
+            return 0
+       
+        for enfant in self.enfants.items():
+             height = max(height, enfant.get_max_height)
+        
+        return height + 1
+        
+
+    def get_mean_height(self, level=0): 
+        total = 0
+        if self.terminal():
+            
+            for donnee in self.donnees:
+                level+= level
+            return level
+        else:
+            for enfant in self.enfants.items():
+                total += enfant.get_mean_height
+
+        return total/self.child_num
+
+    def child_num(self):
+        total = 0
+        if self.terminal():
+            return 1
+        else:
+            for enfant in self.enfants.items():
+                total += enfant.child_num
+        return total
