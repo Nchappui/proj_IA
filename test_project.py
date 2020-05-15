@@ -9,5 +9,11 @@ print('Arbre de décision :')
 print(arbre)
 print()"""
 
+correct = 0
+total = 0
+
 for d in test_data:
-    print("Was: " + arbre.classifie(d[1]) + "Expected: " + d[0])
+    total += 1
+    if arbre.classifie(d[1])[-1] == d[0]:
+        correct += 1
+print(correct/total)
