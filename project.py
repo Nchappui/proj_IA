@@ -25,4 +25,5 @@ class ResultValues():
 
 
 arbre = ResultValues().arbre
-print(RuleGenerator(arbre).rules)
+rules = RuleGenerator(arbre).rules
+print(rules)

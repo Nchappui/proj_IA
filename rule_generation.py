@@ -6,11 +6,12 @@ class RuleGenerator():
 
   def rec(self, arbre, partial_rule):
     if arbre.terminal() :
-      list_rules = [partial_rule,arbre.classe]
+      list_rules = [[partial_rule,"test_classe"]]#arbre.classe]
     else :
       list_rules = []
-      for key, child in arbre.enfants:
-        string = arbre.attribut + " = " + key
+      dict_ = arbre.enfants
+      for key, child in dict_.items():
+        string = "test"#str(arbre.attribut) + " = " + key.str()
         list_rules = list_rules + self.rec(child, partial_rule + [string])
     return list_rules
 
