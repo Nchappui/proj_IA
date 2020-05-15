@@ -26,4 +26,5 @@ class ResultValues():
 
 arbre = ResultValues().arbre
 rules = RuleGenerator(arbre).rules
-print(rules)
+text_rules = '\n'.join([str(i) for i in rules])
+print(text_rules)
