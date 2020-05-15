@@ -1,5 +1,6 @@
 from id3.moteur_id3.id3  import ID3
 from id3.train_bin       import donnees as train_data
+from rule_generation     import *
 
 
 class ResultValues():
@@ -20,3 +21,8 @@ class ResultValues():
 
     def get_results(self):
         return [self.arbre, self.faits_initiaux, self.regles, self.arbre_advance]
+
+
+
+arbre = ResultValues().arbre
+print(RuleGenerator(arbre).rules)
