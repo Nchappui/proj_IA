@@ -92,17 +92,32 @@ class NoeudDeDecision:
         
 
     def get_mean_height(self, level=0): 
+        total_height = self.get_total_height()
+        total_donnee = self.get_total_donnee()
+        return total_height/total_donnee
+    
+    def get_total_donnee(self):
         total = 0
-        if self.terminal():
-            
+        if self.terminal:
             for donnee in self.donnees:
-                level+= level
-            return level
+                total+=1
+            return total
         else:
             for enfant in self.enfants.items():
-                total += enfant.get_mean_height
+                total+=enfant.get_total_donnee()
+        return total
 
-        return total/self.child_num
+    def get_total_height(self, level=0):
+        total = 0
+        if self.terminal():
+            for donnee in self.donnees:
+                total += level
+            return total
+        else:
+            for enfant in self.enfants.items():
+                total+= enfant.get_total_height(level+1)
+        return total
+
 
     def child_num(self):
         total = 0
