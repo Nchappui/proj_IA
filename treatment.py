@@ -5,16 +5,28 @@ class Treatment():
     def treatment(self, donnees, num_treats, rules):
         result=0
         for donnee in donnees:
-            changes=0
-            while changes <=num_treats:
-                if self.func(donnee, rules) == 1:
-                    self.changedonnee(donnee, changes)
+            changes=1
+            while changes <=num_treats and donnee[0]==1:
+                if changes == 1:
+                    #change one attribute
+                    for key, value in donnee[1].items():
+                        if key !='age' or key !='sex':
+                            
+                            if explaineWithRule(donnee[0],rules)[-1] == 0:
+                                #patient soigne
+                                result +=1
+                                changes=3
+                                break
+                    
+                    
+                elif changes ==2:
+                    #change two attributes
+                    for key, value in donnee[1].items():
+                        if key !='age' or key !='sex':
+                            value +=1
 
-                else:
-                    #patient is not sick anymore
-                    result +=1
-
-        return 0
+                changes +=1
+        return result
 
 
     
@@ -23,8 +35,4 @@ class Treatment():
 
     def func(self, donnee, rules):
         #just to remove errors
-        return 1
-
-    def changedonnee(self, donnee, changes):
-        #changes a donne and updates the number of changes made
         return 1
