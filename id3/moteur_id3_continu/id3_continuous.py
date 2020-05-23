@@ -216,10 +216,10 @@ class ID3_continuous:
 
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
 
-    def max_h_C_A(self, donnees, attribut):
+    def min_h_C_A(self, donnees, attribut):
         seuils = list({donnee[attribut] for donnee in donnees})
         h_C_As = map(lambda seuil: (seuil,self.h_C_A(donnees, attribut, seuil)), seuils)
 
-        max_h_C_A = max(h_C_As, key = lambda pair: pair[1])
-        return max_h_C_A
+        min_h_C_A = min(h_C_As, key = lambda pair: pair[1])
+        return min_h_C_A
 
