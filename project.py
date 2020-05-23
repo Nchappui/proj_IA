@@ -27,5 +27,11 @@ rules = ResultValues().regles
 text_rules = '\n'.join(map(str, rules))
 print(text_rules)
 print("-----------------------------------")
-explain = explainWithRule(rules,train_data[7])
-print('\n'.join(map(str, explain)))
+"""
+explain = getRuleForExample(rules,train_data[7][1])
+print(explain)#'\n'.join(map(str, explain)))
+print(explain in rules)
+"""
+all_ = all(getRuleFromExample(rules, dataPoint[1]) in rules for dataPoint in train_data)
+print(all_)
+print(explainRuleFromExample(rules,train_data[7][1]))
