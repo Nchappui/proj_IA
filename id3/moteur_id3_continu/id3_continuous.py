@@ -21,14 +21,14 @@ class ID3_continuous:
         # Nous devons extraire les domaines de valeur des 
         # attributs, puisqu'ils sont nécessaires pour 
         # construire l'arbre.
-        attributs = {}
+        seuilsDict = {}
         for donnee in donnees:
-            for attribut, valeur in donnee[1].items():
-                valeurs = attributs.get(attribut)
+            for attribut, seuil in donnee[1].items():
+                valeurs = seuilsDict.get(attribut)
                 if valeurs is None:
                     valeurs = set()
-                    attributs[attribut] = valeurs
-                valeurs.add(valeur)
+                    seuilsDict[attribut] = valeurs
+                valeurs.add(seuil)
 
         # Find the predominant class
         classes = set([row[0] for row in donnees])
@@ -41,11 +41,11 @@ class ID3_continuous:
                 predominant_class = c
         # print(predominant_class)
             
-        arbre = self.construit_arbre_recur(donnees, attributs, predominant_class)
+        arbre = self.construit_arbre_recur(donnees, seuilsDict, predominant_class)
 
         return arbre
 
-    def construit_arbre_recur(self, donnees, attributs, predominant_class):
+    def construit_arbre_recur(self, donnees, seuilsDict, predominant_class):
         """ Construit rédurcivement un arbre de décision à partir 
             des données d'apprentissage et d'un dictionnaire liant
             les attributs à la liste de leurs valeurs possibles.
@@ -79,8 +79,8 @@ class ID3_continuous:
             
         else:
             # Sélectionne l'attribut qui réduit au maximum l'entropie.
-            h_C_As_attribs = [(self.h_C_A(donnees, attribut, attributs[attribut]), 
-                               attribut) for attribut in attributs]
+            h_C_As_attribs = [(self.h_C_A(donnees, attribut, seuils), 
+                               attribut) for attribut, seuils in seuilsDict]
 
             attribut = min(h_C_As_attribs, key=lambda h_a: h_a[0])[1]
 
@@ -216,8 +216,7 @@ class ID3_continuous:
 
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
 
-    def min_h_C_A(self, donnees, attribut):
-        seuils = list({donnee[attribut] for donnee in donnees})
+    def min_h_C_A(self, donnees, attribut, seuils):
         h_C_As = map(lambda seuil: (seuil,self.h_C_A(donnees, attribut, seuil)), seuils)
 
         min_h_C_A = min(h_C_As, key = lambda pair: pair[1])
