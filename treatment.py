@@ -48,7 +48,7 @@ class Treatment():
         
         reses = []
         for attribut, value in example.items():
-            if(attribut != 'age' or attribut != 'sex' or (attribut not in map(lambda pair: pair[0],acc))):
+            if(attribut != 'age' and attribut != 'sex' and (attribut not in map(lambda pair: pair[0],acc))):
                 res = modifyAttribut(attribut, value)
                 if(res is not None):
                     reses.append(res)
@@ -60,7 +60,7 @@ class Treatment():
     
     def treatment(self, examples):
 
-        sickExamples = filter(lambda example: getRuleFromExample(self.rules, example), examples)
+        sickExamples = filter(lambda example: getRuleFromExample(self.rules, example)[1] == '1', examples)
 
         depthLimit = 0
 

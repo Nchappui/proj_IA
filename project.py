@@ -44,6 +44,6 @@ print(explainRuleFromExample(rules,train_data[7][1]))
 
 print("-----------------------------------")
 """
-test_stripped = map(lambda pair: pair[1], train_data)
+test_stripped = map(lambda pair: pair[1], train_data[:50])
 treated = Treatment(train_data, rules).treatment(test_stripped)
 print(treated)
