@@ -86,6 +86,4 @@ class Treatment():
                 numChanges = depthLimit - res[0] + 1
                 changes = res[1]
                 treated.append((example, numChanges, changes))
-        print("Nombre de cas détectés:" )
-        print(count)
         return treated
