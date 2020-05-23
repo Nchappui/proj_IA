@@ -22,8 +22,11 @@ class RuleGenerator():
 
 def getRuleFromExample(rules, example):
   def rec(rules, example, acc):
-    if(rules[0][0]):
-      attibut = rules[0][0][0][0]
+    firstRule = rules[0]
+    conditions = firstRule[0]
+
+    if(conditions):
+      attibut = conditions[0][0]
       valAtAttribut = example[attibut]
 
       def filter_(rule):

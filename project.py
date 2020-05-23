@@ -33,5 +33,6 @@ print(explain)#'\n'.join(map(str, explain)))
 print(explain in rules)
 """
 all_ = all(getRuleFromExample(rules, dataPoint[1]) in rules for dataPoint in train_data)
-print(all_)
+print(f"is getRuleFromExample in rules for all rules ?: {all_}")
+print("-----------------------------------")
 print(explainRuleFromExample(rules,train_data[7][1]))
