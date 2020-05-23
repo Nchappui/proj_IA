@@ -82,19 +82,16 @@ class ID3_continuous:
             h_C_As_attribs = [(self.h_C_A(donnees, attribut, seuils), 
                                attribut) for attribut, seuils in seuilsDict]
 
-            attribut = min(h_C_As_attribs, key=lambda h_a: h_a[0])[1]
+            minSol = min(h_C_As_attribs, key=lambda h_a: h_a[0][0])
+            attribut = minSol[1]
+            seuil = minSol[0][1]
 
-            # Crée les sous-arbres de manière récursive.
-            attributs_restants = attributs.copy()
-            del attributs_restants[attribut]
-
-            partitions = self.partitionne(donnees, attribut, attributs[attribut])
+            partitions = self.partitionne(donnees, attribut, seuil)
             
-            enfants = {}
-            for valeur, partition in partitions.items():
-                enfants[valeur] = self.construit_arbre_recur(partition,
-                                                             attributs_restants,
-                                                             predominant_class)
+            def partToChild(part):
+                self.construit_arbre_recur(part, seuilsDict, predominant_class)
+
+            enfants = map(partToChild, partitions)
 
             return NoeudDeDecision(attribut, donnees, str(predominant_class), enfants)
 
@@ -217,8 +214,8 @@ class ID3_continuous:
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
 
     def min_h_C_A(self, donnees, attribut, seuils):
-        h_C_As = map(lambda seuil: (seuil,self.h_C_A(donnees, attribut, seuil)), seuils)
+        h_C_As = map(lambda seuil: (self.h_C_A(donnees, attribut, seuil), seuil), seuils)
 
-        min_h_C_A = min(h_C_As, key = lambda pair: pair[1])
+        min_h_C_A = min(h_C_As, key = lambda pair: pair[0])
         return min_h_C_A
 
