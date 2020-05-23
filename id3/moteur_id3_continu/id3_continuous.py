@@ -89,9 +89,9 @@ class ID3_continuous:
             partitions = self.partitionne(donnees, attribut, seuil)
             
             def partToChild(part):
-                self.construit_arbre_recur(part, seuilsDict, predominant_class)
+                return self.construit_arbre_recur(part, seuilsDict, predominant_class)
 
-            enfants = map(partToChild, partitions)
+            enfants = list(map(partToChild, partitions))
 
             return NoeudDeDecision(attribut, seuil, donnees, str(predominant_class), enfants)
 
@@ -142,14 +142,6 @@ class ID3_continuous:
         """
         parts = self.partitionne(donnees, attribut, seuil)
         nombre_ajs = map(lambda part: len(part), parts)
-
-        # Nombre d'occurrences de la valeur a_j parmi les données.
-        donnees_aj = [donnee for donnee in donnees if donnee[1][attribut] <= seuil]
-        nombre_aj = len(donnees_aj)
-        
-        # Permet d'éviter les divisions par 0.
-        if nombre_aj == 0:
-            return 0
         
         # Nombre d'occurrences de la classe c_i parmi les données pour lesquelles 
         # A vaut a_j.
@@ -163,9 +155,9 @@ class ID3_continuous:
             nombre_ci = pair[0]
             nombre_aj = pair[1]
             if(nombre_aj == 0):
-                0.0
+                return 0.0
             else:
-                nombre_ci / nombre_aj
+                return nombre_ci / nombre_aj
         
         return map(map_, zip(nombre_cis, nombre_ajs))
 
@@ -208,12 +200,12 @@ class ID3_continuous:
         """
         # Calcule P(a_j) pour chaque valeur a_j de l'attribut A.
         #p_ajs = [self.p_aj(donnees, attribut, seuil) for valeur in valeurs]
-        p_ajs = self.p_aj(donnees, attribut, seuil)
+        p_ajs = list(self.p_aj(donnees, attribut, seuil))
 
         # Calcule H_C_aj pour chaque valeur a_j de l'attribut A.
         #h_c_ajs = [self.h_C_aj(donnees, attribut, seuil) 
         #           for valeur in valeurs]
-        h_c_ajs = self.h_C_aj(donnees, attribut, seuil)
+        h_c_ajs = list(self.h_C_aj(donnees, attribut, seuil))
 
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
 

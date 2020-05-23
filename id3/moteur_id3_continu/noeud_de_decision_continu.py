@@ -78,9 +78,14 @@ class NoeudDeDecision:
                 rep += str(donnee) + '\n' 
 
         else:
-            for valeur, enfant in self.enfants.items():
+            for b in [True, False]:
+                enfant = self.enfants[b]
+                if(b):
+                    op = "<="
+                else:
+                    op = ">"
                 rep += '---'*level
-                rep += 'Si {} = {}: \n'.format(self.attribut, valeur.upper())
+                rep += f'Si {self.attribut} {op} {self.seuil}: \n'
                 rep += enfant.repr_arbre(level+1)
 
         return rep
