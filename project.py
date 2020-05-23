@@ -14,12 +14,16 @@ class ResultValues():
         def getPrecision():
             total=0
             correct=0
-        
             for d in test_data:
                 total += 1
                 if self.arbre.classifie(d[1])[-1] == d[0]:
                     correct += 1
             return (correct/total)
+
+        def getTreatment():
+            test_stripped = map(lambda pair: pair[1], test_data)
+            treated = Treatment(train_data, rules).treatment(test_stripped)
+            return treated
         
         id3 = ID3()
 
@@ -28,11 +32,19 @@ class ResultValues():
         self.max_height=self.arbre.get_max_height()
         self.mean_height=self.arbre.get_mean_height()
         self.child_num=self.arbre.child_num()
+
         # Task 2
         self.precision=getPrecision()
+
         # Task 3
         self.faits_initiaux = None
         self.regles = RuleGenerator(self.arbre).rules
+        """The function getRuleFromExample in RuleGenerator takes a rule and an example as parameters and returns the rule for this example, 
+            and then explainRuleFromExample takes as parameters a rule and an example and prints a nice prediction and explanation for it"""
+
+        # Task 4
+        self.traitements = getTreatment()
+
         # Task 5
         self.arbre_advance = ID3_C().construit_arbre(train_data_continuous)
 
@@ -61,8 +73,6 @@ print(explainRuleFromExample(rules,test_data[0][1]))
 
 print("-----------------------------------")
 
-test_stripped = map(lambda pair: pair[1], test_data)
-treated = Treatment(train_data, rules).treatment(test_stripped)
 count=0
 for treat in treated:
     count+=1
