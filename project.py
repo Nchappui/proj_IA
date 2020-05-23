@@ -1,6 +1,7 @@
 from id3.moteur_id3.id3                     import ID3
 from id3.moteur_id3_continu.id3_continuous  import ID3_continuous   as ID3_C
 from id3.train_bin                          import donnees          as train_data
+from id3.train_bin                          import donnees          as train_data_continuous
 from id3.test_public_bin                    import donnees          as test_data
 from rule_generation                        import *
 from treatment                              import *
@@ -45,15 +46,15 @@ class ResultValues():
         self.traitements = getTreatment()
 
         # Task 5
-        self.arbre_advance = None
+        self.arbre_advance = ID3_C().construit_arbre(train_data_continuous)
 
     def get_results(self):
         return [self.arbre, self.faits_initiaux, self.regles, self.arbre_advance]
 
-
+print(ResultValues().arbre_advance)
+"""
 rules = ResultValues().regles
 
-"""
 text_rules = '\n'.join(map(str, rules))
 print(text_rules)
 
