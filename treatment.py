@@ -13,7 +13,7 @@ class Treatment():
                         if key !='age' or key !='sex':
                             if key == 'cp':
                                 value=0
-                                if explaineWithRule(donnee[0],rules)[-1] == 0:
+                                if getRuleForExample(rules, donnee[0])[-1] == 0:
                                     #patient soigne
                                     result +=1
                                     changes=3
