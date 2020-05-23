@@ -1,6 +1,8 @@
 from id3.moteur_id3.id3  import ID3
 from id3.train_bin       import donnees as train_data
+from id3.test_public_bin       import donnees as test_data
 from rule_generation     import *
+from treatment           import *
 
 
 class ResultValues():
@@ -24,15 +26,24 @@ class ResultValues():
 
 
 rules = ResultValues().regles
+"""
 text_rules = '\n'.join(map(str, rules))
 print(text_rules)
 print("-----------------------------------")
-"""
+
 explain = getRuleForExample(rules,train_data[7][1])
 print(explain)#'\n'.join(map(str, explain)))
 print(explain in rules)
-"""
+
 all_ = all(getRuleFromExample(rules, dataPoint[1]) in rules for dataPoint in train_data)
 print(f"is getRuleFromExample in rules for all rules ?: {all_}")
+
 print("-----------------------------------")
+
 print(explainRuleFromExample(rules,train_data[7][1]))
+
+print("-----------------------------------")
+"""
+test_stripped = map(lambda pair: pair[1], train_data)
+treated = Treatment(train_data, rules).treatment(test_stripped)
+print(treated)
