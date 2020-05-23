@@ -11,12 +11,15 @@ class Treatment():
                     #change one attribute
                     for key, value in donnee[1].items():
                         if key !='age' or key !='sex':
-                            
-                            if explaineWithRule(donnee[0],rules)[-1] == 0:
-                                #patient soigne
-                                result +=1
-                                changes=3
-                                break
+                            if key == 'cp':
+                                value=0
+                                if explaineWithRule(donnee[0],rules)[-1] == 0:
+                                    #patient soigne
+                                    result +=1
+                                    changes=3
+                                    break
+                                value=1
+                                ...
                     
                     
                 elif changes ==2:
