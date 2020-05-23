@@ -1,13 +1,17 @@
 from id3.moteur_id3     import noeud_de_decision
 from rule_generation    import *
 
+realAttribut={'age': {'5', '1', '4', '3', '2'}, 'sex': {'1', '0'}, 'cp': {'1', '0', '3', '2'}, 'trestbps': {'5', '1', '4', '3', '2'}, 'chol': {'5', '1', '3', '2'}, 'fbs': {'1', '0'}, 'restecg': {'1', '0', '2'}, 'thalach': {'1', '4', '3', 
+'2'}, 'exang': {'1', '0'}, 'oldpeak': {'5', '1', '4', '3', '2'}, 'slope': {'1', '0', '2'}, 'ca': {'1', '4', '3', '0', '2'}, 'thal': {'1', '3', '2', '0'}}
+
 class Treatment():
     def __init__(self, donnees, rules):
         self.attributDict = self.constructAttributDict(donnees)
         self.rules = rules
 
     def constructAttributDict(self, donnees):
-        attributs = {}
+        attributs = realAttribut
+        """
         for donnee in donnees:
             for attribut, valeur in donnee[1].items():
                 valeurs = attributs.get(attribut)
@@ -15,6 +19,8 @@ class Treatment():
                     valeurs = set()
                     attributs[attribut] = valeurs
                 valeurs.add(valeur)
+        print(attributs)
+        """
         return attributs
 
     
@@ -69,7 +75,7 @@ class Treatment():
 
         sickExamples = filter(lambda example: getRuleFromExample(self.rules, example)[1] == '1', examples)
         
-        depthLimit = 0
+        depthLimit = 1
         count=0
         treated = []
 

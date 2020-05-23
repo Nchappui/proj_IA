@@ -1,7 +1,7 @@
 from id3.moteur_id3.id3  import ID3
 from id3.train_bin       import donnees as train_data
 from id3.test_public_bin       import donnees as test_data
-from rule_generation     import *
+from rule_generation        import *
 from treatment           import *
 
 
@@ -15,6 +15,7 @@ class ResultValues():
 
         # Task 1
         self.arbre = id3.construit_arbre(train_data)
+        print(self.arbre)
         # Task 3
         self.faits_initiaux = None
         self.regles = RuleGenerator(self.arbre).rules
@@ -27,12 +28,13 @@ class ResultValues():
 
 rules = ResultValues().regles
 
+"""
 text_rules = '\n'.join(map(str, rules))
 print(text_rules)
-"""
+
 print("-----------------------------------")
 
-explain = getRuleForExample(rules,train_data[7][1])
+explain = getRuleFromExample(rules,train_data[7][1])
 print(explain)#'\n'.join(map(str, explain)))
 print(explain in rules)
 
@@ -41,11 +43,11 @@ print(f"is getRuleFromExample in rules for all rules ?: {all_}")
 
 print("-----------------------------------")
 
-print(explainRuleFromExample(rules,train_data[7][1]))
-"""
-print("-----------------------------------")
+print(explainRuleFromExample(rules,test_data[0][1]))
 
-test_stripped = map(lambda pair: pair[1], train_data)
+print("-----------------------------------")
+"""
+test_stripped = map(lambda pair: pair[1], test_data)
 treated = Treatment(train_data, rules).treatment(test_stripped)
 count=0
 for treat in treated:
@@ -53,3 +55,4 @@ for treat in treated:
     print(treat)
 print("Cas soignés:")
 print(count)
+
