@@ -92,8 +92,8 @@ class NoeudDeDecision:
         if self.terminal():
             return 0
        
-        for enfant in self.enfants.items():
-             height = max(height, enfant.get_max_height)
+        for valeur, enfant in self.enfants.items():
+            height = max(height, enfant.get_max_height())
         
         return height + 1
         
@@ -105,23 +105,19 @@ class NoeudDeDecision:
     
     def get_total_donnee(self):
         total = 0
-        if self.terminal:
-            for donnee in self.donnees:
-                total+=1
-            return total
+        if self.terminal():
+            return len(self.donnees)
         else:
-            for enfant in self.enfants.items():
+            for valeur, enfant in self.enfants.items():
                 total+=enfant.get_total_donnee()
         return total
 
     def get_total_height(self, level=0):
         total = 0
         if self.terminal():
-            for donnee in self.donnees:
-                total += level
-            return total
+            return len(self.donnees) * level
         else:
-            for enfant in self.enfants.items():
+            for valeur, enfant in self.enfants.items():
                 total+= enfant.get_total_height(level+1)
         return total
 
@@ -131,6 +127,16 @@ class NoeudDeDecision:
         if self.terminal():
             return 1
         else:
-            for enfant in self.enfants.items():
+            for valeur, enfant in self.enfants.items():
                 total += enfant.child_num
+        return total
+
+
+    def child_num(self):
+        total = 0
+        if self.terminal():
+            return 1
+        else:
+            for valeur, enfant in self.enfants.items():
+                total += enfant.child_num()
         return total
