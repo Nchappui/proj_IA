@@ -1,5 +1,5 @@
 from math import log
-from .noeud_de_decision import NoeudDeDecision
+from .noeud_de_decision_continu import NoeudDeDecision
 
 class ID3_continuous:
     """ Algorithme ID3. 
@@ -80,7 +80,7 @@ class ID3_continuous:
         else:
             # Sélectionne l'attribut qui réduit au maximum l'entropie.
             h_C_As_attribs = [(self.min_h_C_A(donnees, attribut, seuils), 
-                               attribut) for attribut, seuils in seuilsDict]
+                               attribut) for attribut, seuils in seuilsDict.items()]
 
             minSol = min(h_C_As_attribs, key=lambda h_a: h_a[0][0])
             attribut = minSol[1]
@@ -106,7 +106,8 @@ class ID3_continuous:
 
         partition = ([], [])
         for donnee in donnees:
-            partition[donnee[attribut] <= seuil].append(donnee)
+            valeur = donnee[1][attribut]
+            partition[valeur <= seuil].append(donnee)
         
         return partition
 
@@ -153,7 +154,7 @@ class ID3_continuous:
         # Nombre d'occurrences de la classe c_i parmi les données pour lesquelles 
         # A vaut a_j.
         donnees_cis = map(lambda part: filter(lambda donnee: donnee[0] == classe, part), parts)
-        nombre_cis = map(lambda part: len(part), donnees_cis)
+        nombre_cis = map(lambda part: len(list(part)), donnees_cis)
 
         # p(c_i|a_j) = nombre d'occurrences de la classe c_i parmi les données 
         #              pour lesquelles A vaut a_j /
@@ -181,14 +182,17 @@ class ID3_continuous:
         classes = list({donnee[0] for donnee in donnees})
         
         # Calcule p(c_i|a_j) pour chaque classe c_i.
-        p_ci_ajs_beneath = [self.p_ci_aj(donnees, attribut, seuil, classe)[0]
+        p_ci_ajs_beneath = [list(self.p_ci_aj(donnees, attribut, seuil, classe))[0]
                     for classe in classes]
-        p_ci_ajs_above = [self.p_ci_aj(donnees, attribut, seuil, classe)[1]
+        p_ci_ajs_above = [list(self.p_ci_aj(donnees, attribut, seuil, classe))[1]
                     for classe in classes]
         
         # Si p vaut 0 -> plog(p) vaut 0.
         def computeH(p_ci_ajs):
-            -sum([p_ci_aj * log(p_ci_aj, 2.0) for p_ci_aj in p_ci_ajs if p_ci_aj != 0])
+            def compute(p_ci_aj):
+                return p_ci_aj * log(p_ci_aj, 2.0)
+            list_ = [compute(p_ci_aj) for p_ci_aj in p_ci_ajs if p_ci_aj != 0]
+            return -sum(list_)
         h_C_ajs = map(computeH, [p_ci_ajs_beneath, p_ci_ajs_above])
 
         return h_C_ajs
