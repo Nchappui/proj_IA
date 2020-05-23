@@ -21,7 +21,7 @@ class ResultValues():
 
         def getTreatment():
             test_stripped = map(lambda pair: pair[1], test_data)
-            treated = Treatment(train_data, rules).treatment(test_stripped)
+            treated = Treatment(train_data, self.rules).treatment(test_stripped)
             return treated
         
         id3 = ID3()

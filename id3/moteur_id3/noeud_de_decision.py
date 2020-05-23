@@ -131,12 +131,3 @@ class NoeudDeDecision:
                 total += enfant.child_num
         return total
 
-
-    def child_num(self):
-        total = 0
-        if self.terminal():
-            return 1
-        else:
-            for valeur, enfant in self.enfants.items():
-                total += enfant.child_num()
-        return total

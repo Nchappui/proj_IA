@@ -15,8 +15,26 @@ class RuleGenerator():
         list_rules = list_rules + self.rec(child, partial_rule + [string])
     return list_rules
 
+  def faits_initiaux_rec(self, arbre, level=0):
+    faits_initiaux = []
+    if arbre.terminal():
+      rep += '---'*level
+      rep += 'Alors {}\n'.format(arbre.classe().upper())
+      rep += '---'*level
+      rep += 'Décision basée sur les données:\n'
+      for donnee in arbre.donnees:
+        rep += '---'*level
+        rep += str(donnee) + '\n' 
+    else:
+      for valeur, enfant in arbre.enfants.items():
+        rep += '---'*level
+        rep += 'Si {} = {}: \n'.format(arbre.attribut, valeur.upper())
+        rep += enfant.repr_arbre(level+1)
+    return rep
+
   def __init__(self, arbre):
     self.rules = self.rec(arbre, [])
+    self.faits_initiaux = self.faits_initiaux_rec(arbre, [])
 
 
 
