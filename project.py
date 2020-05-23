@@ -15,7 +15,7 @@ class ResultValues():
         self.arbre = id3.construit_arbre(train_data)
         # Task 3
         self.faits_initiaux = None
-        self.regles = None
+        self.regles = RuleGenerator(self.arbre).rules
         # Task 5
         self.arbre_advance = None
 
@@ -23,8 +23,6 @@ class ResultValues():
         return [self.arbre, self.faits_initiaux, self.regles, self.arbre_advance]
 
 
-
-arbre = ResultValues().arbre
-rules = RuleGenerator(arbre).rules
+rules = ResultValues().regles
 text_rules = '\n'.join(map(str, rules))
 print(text_rules)
