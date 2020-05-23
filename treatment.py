@@ -33,17 +33,13 @@ class Treatment():
             partialRes = []
             for nV in newValues:
                 
-                #print("--" + attribut, nV)
                 example[attribut] = nV
                 label = getRuleFromExample(self.rules, example)[1]
-                
-                #print(label)
 
                 newAcc = acc + [[attribut,nV]]
 
                 if(label == '0'):
                     example[attribut] = value
-                    #print(depthLimit, newAcc)
                     return [depthLimit, newAcc]
                 elif(depthLimit > 0):
                     res = self.modifyExample(example, depthLimit-1, newAcc)
@@ -61,7 +57,6 @@ class Treatment():
         for attribut, value in example.items():
             if(attribut != 'age' and attribut != 'sex' and (attribut not in map(lambda pair: pair[0],acc))):
                 
-                #print(attribut,value)
                 res = modifyAttribut(attribut, value)
                 if(res is not None):
                     reses.append(res)

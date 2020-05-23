@@ -2,13 +2,7 @@ from math import log
 from .noeud_de_decision_continu import NoeudDeDecision
 
 class ID3_continuous:
-    """ Algorithme ID3. 
-
-        This is an updated version from the one in the book (Intelligence Artificielle par la pratique).
-        Specifically, in construit_arbre_recur(), if donnees == [] (line 70), it returns a terminal node with the predominant class of the dataset -- as computed in construit_arbre() -- instead of returning None.
-        Moreover, the predominant class is also passed as a parameter to NoeudDeDecision().
-    """
-    
+   
     def construit_arbre(self, donnees):
         """ Construit un arbre de décision à partir des données d'apprentissage.
 
@@ -46,7 +40,7 @@ class ID3_continuous:
         return arbre
 
     def construit_arbre_recur(self, donnees, seuilsDict, predominant_class):
-        """ Construit rédurcivement un arbre de décision à partir 
+        """ Construit récursivement un arbre de décision à partir 
             des données d'apprentissage et d'un dictionnaire liant
             les attributs à la liste de leurs valeurs possibles.
 
@@ -96,12 +90,12 @@ class ID3_continuous:
             return NoeudDeDecision(attribut, seuil, donnees, str(predominant_class), enfants)
 
     def partitionne(self, donnees, attribut, seuil):
-        """ Partitionne les données sur les valeurs a_j de l'attribut A.
+        """ Partitionne les données sur la valeur de seuil.
 
             :param list donnees: les données à partitioner.
             :param attribut: l'attribut A de partitionnement.
             :param valeur_seuil
-            :return: une pair de listes, la première dont tous les éléments sont plus petits que le seuil
+            :return: une pair de listes, la première dont tous les éléments sont plus petits que le seuil et la deuxième avec des elements plus grands
         """
 
         partition = ([], [])
@@ -112,12 +106,12 @@ class ID3_continuous:
         return partition
 
     def p_aj(self, donnees, attribut, seuil):
-        """ p(a_j) - la probabilité que la valeur de l'attribut A soit en dessous du seuil.
+        """ p(a_j) - les probabilité que la valeur de l'attribut A soit en dessous du seuil et en dessus du seuil
 
             :param list donnees: les données d'apprentissage.
             :param attribut: l'attribut A.
-            :param valeur: la valeur a_j de l'attribut A.            
-            :return: p(a_j)
+            :param seuil: la valeur de seuil           
+            :return: p(a_j soit en dessous, a_j soit en dessus)
         """
         # Nombre de données.
         nombre_donnees = len(donnees)
@@ -131,14 +125,14 @@ class ID3_continuous:
         return probabilities
 
     def p_ci_aj(self, donnees, attribut, seuil, classe):
-        """ p(c_i|a_j) - la probabilité conditionnelle que la classe C soit c_i\
-            étant donné que l'attribut A vaut a_j.
+        """ p(c_i|a_j) - les probabilités conditionnelles que la classe C soit c_i\
+            étant donné que l'attribut A soit respectivement en dessus et en dessous du seuil.
 
             :param list donnees: les données d'apprentissage.
             :param attribut: l'attribut A.
-            :param valeur: la valeur a_j de l'attribut A.
+            :param seuil: la valeur du seuil.
             :param classe: la valeur c_i de la classe C.
-            :return: p(c_i | a_j)
+            :return: p(c_i | < seuil),p (c_i | > seuil)
         """
         parts = self.partitionne(donnees, attribut, seuil)
         nombre_ajs = map(lambda part: len(part), parts)
@@ -162,13 +156,13 @@ class ID3_continuous:
         return map(map_, zip(nombre_cis, nombre_ajs))
 
     def h_C_aj(self, donnees, attribut, seuil):
-        """ H(C|a_j) - l'entropie de la classe parmi les données pour lesquelles\
-            l'attribut A vaut a_j.
+        """ H(C|a_j) - les entropies de la classe parmi les données pour lesquelles\
+            l'attribut A est respectivement en dessous et en dessus du seuil.
 
             :param list donnees: les données d'apprentissage.
             :param attribut: l'attribut A.
-            :param valeur: la valeur a_j de l'attribut A.
-            :return: H(C|a_j)
+            :param seuil: la valeur du seuil.
+            :return: H(C | < seuil), H(C | > seuilS)
         """
         # Les classes attestées dans les exemples.
         classes = list({donnee[0] for donnee in donnees})
@@ -195,8 +189,8 @@ class ID3_continuous:
             
             :param list donnees: les données d'apprentissage.
             :param attribut: l'attribut A.
-            :param list valeurs: les valeurs a_j de l'attribut A.
-            :return: H(C|A)
+            :param seuil: la valeur du seuil.
+            :return: H(C| < seuil), H(C| > seuil)
         """
         # Calcule P(a_j) pour chaque valeur a_j de l'attribut A.
         #p_ajs = [self.p_aj(donnees, attribut, seuil) for valeur in valeurs]
