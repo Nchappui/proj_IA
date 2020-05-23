@@ -32,7 +32,7 @@ class ResultValues():
         self.max_height=self.arbre.get_max_height()
         self.mean_height=self.arbre.get_mean_height()
         self.child_num=self.arbre.child_num()
-        
+
         # Task 2
         self.precision=getPrecision()
 
