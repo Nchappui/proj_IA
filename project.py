@@ -12,12 +12,16 @@ class ResultValues():
         def getPrecision():
             total=0
             correct=0
-        
             for d in test_data:
                 total += 1
                 if self.arbre.classifie(d[1])[-1] == d[0]:
                     correct += 1
             return (correct/total)
+
+        def getTreatment():
+            test_stripped = map(lambda pair: pair[1], test_data)
+            treated = Treatment(train_data, rules).treatment(test_stripped)
+            return treated
         
         id3 = ID3()
 
@@ -31,6 +35,8 @@ class ResultValues():
         # Task 3
         self.faits_initiaux = None
         self.regles = RuleGenerator(self.arbre).rules
+        # Task 4
+        self.traitements = getTreatment()
         # Task 5
         self.arbre_advance = None
 
@@ -59,8 +65,6 @@ print(explainRuleFromExample(rules,test_data[0][1]))
 
 print("-----------------------------------")
 
-test_stripped = map(lambda pair: pair[1], test_data)
-treated = Treatment(train_data, rules).treatment(test_stripped)
 count=0
 for treat in treated:
     count+=1
