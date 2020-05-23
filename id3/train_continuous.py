@@ -1,4 +1,4 @@
-age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal,target
+donnees = [
 	['0', {
 		'age': '60',
 		'sex': '1' ,
@@ -2143,4 +2143,5 @@ age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal,target
 		'slope': '1',
 		'ca': '0',
 		'thal': '2'
-	}],
+	}]
+]

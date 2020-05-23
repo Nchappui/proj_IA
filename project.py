@@ -1,7 +1,7 @@
 from id3.moteur_id3.id3                     import ID3
 from id3.moteur_id3_continu.id3_continuous  import ID3_continuous   as ID3_C
 from id3.train_bin                          import donnees          as train_data
-from id3.train_bin                          import donnees          as train_data_continuous
+from id3.train_continuous                   import donnees          as train_data_continuous
 from id3.test_public_bin                    import donnees          as test_data
 from rule_generation                        import *
 from treatment                              import *
@@ -11,12 +11,12 @@ class ResultValues():
 
     def __init__(self):
         
-        def getPrecision():
+        def getPrecision(test_data, arbre):
             total=0
             correct=0
             for d in test_data:
                 total += 1
-                if self.arbre.classifie(d[1])[-1] == d[0]:
+                if arbre.classifie(d[1])[-1] == d[0]:
                     correct += 1
             return (correct/total)
 
@@ -34,7 +34,7 @@ class ResultValues():
         self.child_num=self.arbre.child_num()
         
         # Task 2
-        self.precision=getPrecision()
+        self.precision=getPrecision(test_data, self.arbre)
 
         # Task 3
         self.faits_initiaux = RuleGenerator(self.arbre).faits_initiaux
