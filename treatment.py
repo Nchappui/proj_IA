@@ -1,13 +1,17 @@
 from id3.moteur_id3     import noeud_de_decision
 from rule_generation    import *
 
+realAttribut={'age': {'5', '1', '4', '3', '2'}, 'sex': {'1', '0'}, 'cp': {'1', '0', '3', '2'}, 'trestbps': {'5', '1', '4', '3', '2'}, 'chol': {'5', '1', '3', '2'}, 'fbs': {'1', '0'}, 'restecg': {'1', '0', '2'}, 'thalach': {'1', '4', '3', 
+'2'}, 'exang': {'1', '0'}, 'oldpeak': {'5', '1', '4', '3', '2'}, 'slope': {'1', '0', '2'}, 'ca': {'1', '4', '3', '0', '2'}, 'thal': {'1', '3', '2', '0'}}
+
 class Treatment():
     def __init__(self, donnees, rules):
         self.attributDict = self.constructAttributDict(donnees)
         self.rules = rules
 
     def constructAttributDict(self, donnees):
-        attributs = {}
+        attributs = realAttribut
+        """
         for donnee in donnees:
             for attribut, valeur in donnee[1].items():
                 valeurs = attributs.get(attribut)
@@ -15,6 +19,8 @@ class Treatment():
                     valeurs = set()
                     attributs[attribut] = valeurs
                 valeurs.add(valeur)
+        print(attributs)
+        """
         return attributs
 
     
@@ -26,15 +32,20 @@ class Treatment():
 
             partialRes = []
             for nV in newValues:
+                
+                #print("--" + attribut, nV)
                 example[attribut] = nV
                 label = getRuleFromExample(self.rules, example)[1]
+                
+                #print(label)
 
-                newAcc = acc + [[attribut,value]]
+                newAcc = acc + [[attribut,nV]]
 
                 if(label == '0'):
                     example[attribut] = value
+                    #print(depthLimit, newAcc)
                     return [depthLimit, newAcc]
-                elif(depthLimit >= 0):
+                elif(depthLimit > 0):
                     res = self.modifyExample(example, depthLimit-1, newAcc)
                     if res is not None:
                         partialRes.append(res)
@@ -49,6 +60,8 @@ class Treatment():
         reses = []
         for attribut, value in example.items():
             if(attribut != 'age' and attribut != 'sex' and (attribut not in map(lambda pair: pair[0],acc))):
+                
+                #print(attribut,value)
                 res = modifyAttribut(attribut, value)
                 if(res is not None):
                     reses.append(res)
@@ -61,16 +74,18 @@ class Treatment():
     def treatment(self, examples):
 
         sickExamples = filter(lambda example: getRuleFromExample(self.rules, example)[1] == '1', examples)
-
-        depthLimit = 0
-
+        
+        depthLimit = 1
+        count=0
         treated = []
 
         for example in sickExamples:
+            count+=1
             res = self.modifyExample(example, depthLimit, [])
             if(res is not None):
                 numChanges = depthLimit - res[0] + 1
                 changes = res[1]
-                treated.append((numChanges, changes))
-                
+                treated.append((example, numChanges, changes))
+        print("Nombre de cas détectés:" )
+        print(count)
         return treated

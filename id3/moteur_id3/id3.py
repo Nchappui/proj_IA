@@ -1,6 +1,9 @@
 from math import log
 from .noeud_de_decision import NoeudDeDecision
 
+realAttributs = {'age': {'5', '1', '4', '3', '2'}, 'sex': {'1', '0'}, 'cp': {'1', '0', '3', '2'}, 'trestbps': {'5', '1', '4', '3', '2'}, 'chol': {'5', '1', '3', '2'}, 'fbs': {'1', '0'}, 'restecg': {'1', '0', '2'}, 'thalach': {'1', '4', '3', 
+'2'}, 'exang': {'1', '0'}, 'oldpeak': {'5', '1', '4', '3', '2'}, 'slope': {'1', '0', '2'}, 'ca': {'1', '4', '3', '0', '2'}, 'thal': {'1', '3', '2', '0'}}
+
 class ID3:
     """ Algorithme ID3. 
 
@@ -21,7 +24,8 @@ class ID3:
         # Nous devons extraire les domaines de valeur des 
         # attributs, puisqu'ils sont nécessaires pour 
         # construire l'arbre.
-        attributs = {}
+        attributs = realAttributs
+        """
         for donnee in donnees:
             for attribut, valeur in donnee[1].items():
                 valeurs = attributs.get(attribut)
@@ -29,7 +33,7 @@ class ID3:
                     valeurs = set()
                     attributs[attribut] = valeurs
                 valeurs.add(valeur)
-
+        """
         # Find the predominant class
         classes = set([row[0] for row in donnees])
         # print(classes)
