@@ -34,7 +34,7 @@ class RuleGenerator():
 
   def __init__(self, arbre):
     self.rules = self.rec(arbre, [])
-    self.faits_initiaux = self.faits_initiaux_rec(arbre, [])
+    #self.faits_initiaux = self.faits_initiaux_rec(arbre, [])
 
 
 

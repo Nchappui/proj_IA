@@ -128,6 +128,6 @@ class NoeudDeDecision:
             return 1
         else:
             for valeur, enfant in self.enfants.items():
-                total += enfant.child_num
+                total += enfant.child_num()
         return total
 
