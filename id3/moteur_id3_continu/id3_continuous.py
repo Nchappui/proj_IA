@@ -70,16 +70,16 @@ class ID3_continuous:
             return True
 
         if donnees == []:
-            return NoeudDeDecision(None, [str(predominant_class), dict()], str(predominant_class))
+            return NoeudDeDecision(None, None, [str(predominant_class), dict()], str(predominant_class))
 
         # Si toutes les données restantes font partie de la même classe,
         # on peut retourner un noeud terminal.
         elif classe_unique(donnees):
-            return NoeudDeDecision(None, donnees, str(predominant_class))
+            return NoeudDeDecision(None, None, donnees, str(predominant_class))
             
         else:
             # Sélectionne l'attribut qui réduit au maximum l'entropie.
-            h_C_As_attribs = [(self.h_C_A(donnees, attribut, seuils), 
+            h_C_As_attribs = [(self.min_h_C_A(donnees, attribut, seuils), 
                                attribut) for attribut, seuils in seuilsDict]
 
             minSol = min(h_C_As_attribs, key=lambda h_a: h_a[0][0])
@@ -93,7 +93,7 @@ class ID3_continuous:
 
             enfants = map(partToChild, partitions)
 
-            return NoeudDeDecision(attribut, donnees, str(predominant_class), enfants)
+            return NoeudDeDecision(attribut, seuil, donnees, str(predominant_class), enfants)
 
     def partitionne(self, donnees, attribut, seuil):
         """ Partitionne les données sur les valeurs a_j de l'attribut A.
