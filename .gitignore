@@ -2,3 +2,5 @@ id3/moteur_id3/__pycache__
 id3/__pycache__
 __pycache__
 .vscode/
+id3/moteur_id3_continu/__init__.py
+id3/moteur_id3_continu/.DS_Store
