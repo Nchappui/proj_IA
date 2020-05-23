@@ -26,15 +26,20 @@ class Treatment():
 
             partialRes = []
             for nV in newValues:
+                
+                #print("--" + attribut, nV)
                 example[attribut] = nV
                 label = getRuleFromExample(self.rules, example)[1]
+                
+                #print(label)
 
-                newAcc = acc + [[attribut,value]]
+                newAcc = acc + [[attribut,nV]]
 
                 if(label == '0'):
                     example[attribut] = value
+                    #print(depthLimit, newAcc)
                     return [depthLimit, newAcc]
-                elif(depthLimit >= 0):
+                elif(depthLimit > 0):
                     res = self.modifyExample(example, depthLimit-1, newAcc)
                     if res is not None:
                         partialRes.append(res)
@@ -49,6 +54,8 @@ class Treatment():
         reses = []
         for attribut, value in example.items():
             if(attribut != 'age' and attribut != 'sex' and (attribut not in map(lambda pair: pair[0],acc))):
+                
+                #print(attribut,value)
                 res = modifyAttribut(attribut, value)
                 if(res is not None):
                     reses.append(res)
@@ -61,16 +68,18 @@ class Treatment():
     def treatment(self, examples):
 
         sickExamples = filter(lambda example: getRuleFromExample(self.rules, example)[1] == '1', examples)
-
+        
         depthLimit = 0
-
+        count=0
         treated = []
 
         for example in sickExamples:
+            count+=1
             res = self.modifyExample(example, depthLimit, [])
             if(res is not None):
                 numChanges = depthLimit - res[0] + 1
                 changes = res[1]
-                treated.append((numChanges, changes))
-                
+                treated.append((example, numChanges, changes))
+        print("Nombre de cas détectés:" )
+        print(count)
         return treated

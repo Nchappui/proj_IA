@@ -26,9 +26,10 @@ class ResultValues():
 
 
 rules = ResultValues().regles
-"""
+
 text_rules = '\n'.join(map(str, rules))
 print(text_rules)
+"""
 print("-----------------------------------")
 
 explain = getRuleForExample(rules,train_data[7][1])
@@ -41,9 +42,14 @@ print(f"is getRuleFromExample in rules for all rules ?: {all_}")
 print("-----------------------------------")
 
 print(explainRuleFromExample(rules,train_data[7][1]))
-
-print("-----------------------------------")
 """
-test_stripped = map(lambda pair: pair[1], train_data[:50])
+print("-----------------------------------")
+
+test_stripped = map(lambda pair: pair[1], train_data)
 treated = Treatment(train_data, rules).treatment(test_stripped)
-print(treated)
+count=0
+for treat in treated:
+    count+=1
+    print(treat)
+print("Cas soignés:")
+print(count)
