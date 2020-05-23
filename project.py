@@ -26,3 +26,6 @@ class ResultValues():
 rules = ResultValues().regles
 text_rules = '\n'.join(map(str, rules))
 print(text_rules)
+print("-----------------------------------")
+explain = explainWithRule(rules,train_data[7])
+print('\n'.join(map(str, explain)))
