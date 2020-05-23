@@ -32,12 +32,12 @@ class ResultValues():
         self.max_height=self.arbre.get_max_height()
         self.mean_height=self.arbre.get_mean_height()
         self.child_num=self.arbre.child_num()
-
+        
         # Task 2
         self.precision=getPrecision()
 
         # Task 3
-        self.faits_initiaux = None
+        self.faits_initiaux = RuleGenerator(self.arbre).faits_initiaux
         self.regles = RuleGenerator(self.arbre).rules
         """The function getRuleFromExample in RuleGenerator takes a rule and an example as parameters and returns the rule for this example, 
             and then explainRuleFromExample takes as parameters a rule and an example and prints a nice prediction and explanation for it"""
