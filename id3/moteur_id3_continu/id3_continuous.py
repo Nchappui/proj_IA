@@ -181,18 +181,22 @@ class ID3_continuous:
             :return: H(C|a_j)
         """
         # Les classes attestées dans les exemples.
-        classes = list(set([donnee[0] for donnee in donnees]))
+        classes = list({donnee[0] for donnee in donnees})
         
         # Calcule p(c_i|a_j) pour chaque classe c_i.
-        p_ci_ajs = [self.p_ci_aj(donnees, attribut, seuil, classe)[0] #THROWS AWAY VALUE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        p_ci_ajs_beneath = [self.p_ci_aj(donnees, attribut, seuil, classe)[0]
                     for classe in classes]
-
+        p_ci_ajs_above = [self.p_ci_aj(donnees, attribut, seuil, classe)[1]
+                    for classe in classes]
+        
         # Si p vaut 0 -> plog(p) vaut 0.
-        return -sum([p_ci_aj * log(p_ci_aj, 2.0) 
-                    for p_ci_aj in p_ci_ajs 
-                    if p_ci_aj != 0])
+        def computeH(p_ci_ajs):
+            -sum([p_ci_aj * log(p_ci_aj, 2.0) for p_ci_aj in p_ci_ajs if p_ci_aj != 0])
+        h_C_ajs = map(computeH, [p_ci_ajs_beneath, p_ci_ajs_above])
 
-    def h_C_A(self, donnees, attribut, valeurs):
+        return h_C_ajs
+
+    def h_C_A(self, donnees, attribut, seuil):
         """ H(C|A) - l'entropie de la classe après avoir choisi de partitionner\
             les données suivant les valeurs de l'attribut A.
             
@@ -202,10 +206,20 @@ class ID3_continuous:
             :return: H(C|A)
         """
         # Calcule P(a_j) pour chaque valeur a_j de l'attribut A.
-        p_ajs = [self.p_aj(donnees, attribut, valeur) for valeur in valeurs]
+        #p_ajs = [self.p_aj(donnees, attribut, seuil) for valeur in valeurs]
+        p_ajs = self.p_aj(donnees, attribut, seuil)
 
         # Calcule H_C_aj pour chaque valeur a_j de l'attribut A.
-        h_c_ajs = [self.h_C_aj(donnees, attribut, valeur) 
-                   for valeur in valeurs]
+        #h_c_ajs = [self.h_C_aj(donnees, attribut, seuil) 
+        #           for valeur in valeurs]
+        h_c_ajs = self.h_C_aj(donnees, attribut, seuil)
 
         return sum([p_aj * h_c_aj for p_aj, h_c_aj in zip(p_ajs, h_c_ajs)])
+
+    def max_h_C_A(self, donnees, attribut):
+        seuils = list({donnee[attribut] for donnee in donnees})
+        h_C_As = map(lambda seuil: (seuil,self.h_C_A(donnees, attribut, seuil)), seuils)
+
+        max_h_C_A = max(h_C_As, key = lambda pair: pair[1])
+        return max_h_C_A
+
